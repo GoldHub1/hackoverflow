@@ -1,4 +1,4 @@
-#include <LiquidCrystal.h>
+/*#include <LiquidCrystal.h>
 #include <math.h>
 #include <Stepper.h>
 
@@ -54,4 +54,59 @@ void loop(){
   distance = ((duration*.0343)/2)/100;
   lcd.print(distance);
   delay(100);
+}
+*/
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(7, 8, 4, 5, 6, 3);
+
+const int trigPin = 9;
+const int echoPin = 10;
+
+long duration;
+int distance;
+int fixedDistance = 30; 
+int bottleDistance;
+int diameter;
+int radius;
+
+void setup() {
+  lcd.begin(16, 2);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  lcd.print("Measuring...");
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+  bottleDistance = duration * 0.034 / 2;
+
+  diameter = fixedDistance - bottleDistance;
+  radius = diameter / 2;
+
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("Dist: ");
+  lcd.print(bottleDistance);
+  lcd.print(" cm");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Diam: ");
+  lcd.print(diameter);
+  lcd.print(" Rad: ");
+  lcd.print(radius);
+
+  delay(100);  
 }
